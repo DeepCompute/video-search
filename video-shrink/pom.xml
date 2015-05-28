@@ -12,7 +12,59 @@
 	<artifactId>video-shrink</artifactId>
 	<name>Video Shrink</name>
 
+	<properties>
+		<openimaj.version>1.3.1</openimaj.version>
+	</properties>
+
 	<dependencies>
+		<!-- HumbleVideo处理库 -->
+		<dependency>
+			<groupId>io.humble</groupId>
+			<artifactId>humble-video-noarch</artifactId>
+			<version>0.2.1</version>
+		</dependency>
+		<!-- OpenImaj媒体处理库 -->
+		<dependency>
+			<groupId>org.openimaj</groupId>
+			<artifactId>core</artifactId>
+			<version>${openimaj.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.openimaj</groupId>
+			<artifactId>image-processing</artifactId>
+			<version>${openimaj.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.openimaj</groupId>
+			<artifactId>core-video-capture</artifactId>
+			<version>${openimaj.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.openimaj</groupId>
+			<artifactId>video-processing</artifactId>
+			<version>${openimaj.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.openimaj</groupId>
+			<artifactId>core-video</artifactId>
+			<version>${openimaj.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.openimaj</groupId>
+			<artifactId>xuggle-video</artifactId>
+			<version>${openimaj.version}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>xuggle</groupId>
+					<artifactId>xuggle-xuggler-lgpl</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>xuggle</groupId>
+			<artifactId>xuggle-xuggler</artifactId>
+			<version>5.4</version>
+		</dependency>
 		<!-- 日志包 -->
 		<dependency>
 			<groupId>ch.qos.logback</groupId>
@@ -41,5 +93,13 @@
 	<build>
 		<finalName>${project.artifactId}-${project.version}</finalName>
 	</build>
+
+	<repositories>
+		<!-- 需要代理才能下载 -->
+		<repository>
+			<id>xuggle repo</id>
+			<url>http://xuggle.googlecode.com/svn/trunk/repo/share/java/</url>
+		</repository>
+	</repositories>
 
 </project>
