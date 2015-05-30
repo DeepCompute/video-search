@@ -21,6 +21,8 @@ public class FrameRecord implements Serializable {
 	private int frame_index;
 	// 视频帧缓存的服务器IP
 	private String frame_cache_ip;
+	// 视频帧的存储地址
+	private String frame_url;
 	// 视频的记录起始时间
 	private Date video_time_start;
 	// 视频的记录结束时间，秒
@@ -58,6 +60,7 @@ public class FrameRecord implements Serializable {
 		this.frame_content = builder.frame_content;
 		this.frame_index = builder.frame_index;
 		this.frame_cache_ip = builder.frame_cache_ip;
+		this.frame_url = builder.frame_url;
 		this.video_time_start = builder.video_time_start;
 		this.video_time_end = builder.video_time_end;
 		this.video_time_duration = builder.video_time_duration;
@@ -76,11 +79,12 @@ public class FrameRecord implements Serializable {
 	@Override
 	public String toString() {
 		return "FrameRecord [id=" + id + ", frame_content=" + frame_content + ", frame_index=" + frame_index
-				+ ", frame_cache_ip=" + frame_cache_ip + ", video_time_start=" + video_time_start + ", video_time_end="
-				+ video_time_end + ", video_time_duration=" + video_time_duration + ", video_ip=" + video_ip
-				+ ", video_dir=" + video_dir + ", video_name=" + video_name + ", road_id=" + road_id + ", road_name="
-				+ road_name + ", road_name_start=" + road_name_start + ", road_name_end=" + road_name_end
-				+ ", longitude=" + longitude + ", latitude=" + latitude + ", timestamp=" + timestamp + "]";
+				+ ", frame_cache_ip=" + frame_cache_ip + ", frame_url=" + frame_url + ", video_time_start="
+				+ video_time_start + ", video_time_end=" + video_time_end + ", video_time_duration="
+				+ video_time_duration + ", video_ip=" + video_ip + ", video_dir=" + video_dir + ", video_name="
+				+ video_name + ", road_id=" + road_id + ", road_name=" + road_name + ", road_name_start="
+				+ road_name_start + ", road_name_end=" + road_name_end + ", longitude=" + longitude + ", latitude="
+				+ latitude + ", timestamp=" + timestamp + "]";
 	}
 
 	public static class Builder {
@@ -89,6 +93,7 @@ public class FrameRecord implements Serializable {
 		private String frame_content;
 		private int frame_index;
 		private String frame_cache_ip = "";
+		private String frame_url = "";
 		private Date video_time_start = null;
 		private Date video_time_end = null;
 		private int video_time_duration;
@@ -111,6 +116,11 @@ public class FrameRecord implements Serializable {
 
 		public Builder setFrame_cache_ip(String frame_cache_ip) {
 			this.frame_cache_ip = frame_cache_ip;
+			return this;
+		}
+
+		public Builder setFrame_url(String frame_url) {
+			this.frame_url = frame_url;
 			return this;
 		}
 
@@ -215,6 +225,14 @@ public class FrameRecord implements Serializable {
 
 	public void setFrame_cache_ip(String frame_cache_ip) {
 		this.frame_cache_ip = frame_cache_ip;
+	}
+
+	public String getFrame_url() {
+		return frame_url;
+	}
+
+	public void setFrame_url(String frame_url) {
+		this.frame_url = frame_url;
 	}
 
 	public Date getVideo_time_start() {
