@@ -81,6 +81,9 @@ public class Video2Text {
 				// 添加到列表中
 				result.add(frameRecord);
 				index++;
+				if (index == 100) {
+					break;
+				}
 			}
 		}
 		return result;

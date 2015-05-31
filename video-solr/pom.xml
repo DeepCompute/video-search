@@ -13,6 +13,41 @@
 	<name>Video Solr</name>
 
 	<dependencies>
+		<!-- 子项目 -->
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>video-shrink</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<!-- Solr包 -->
+		<dependency>
+			<groupId>org.apache.solr</groupId>
+			<artifactId>solr-solrj</artifactId>
+			<version>4.8.0</version><!--$NO-MVN-MAN-VER$-->
+			<exclusions>
+				<exclusion>
+					<groupId>log4j</groupId>
+					<artifactId>log4j</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<!-- Json包 -->
+		<dependency>
+			<groupId>org.codehaus.jackson</groupId>
+			<artifactId>jackson-mapper-asl</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.codehaus.jackson</groupId>
+			<artifactId>jackson-core-asl</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-core</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+		</dependency>
 		<!-- 日志包 -->
 		<dependency>
 			<groupId>ch.qos.logback</groupId>
