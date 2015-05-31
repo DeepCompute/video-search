@@ -23,11 +23,15 @@ public class FrameRecord implements Serializable {
 	private String frame_cache_ip;
 	// 视频帧的存储地址
 	private String frame_url;
+	// 视频ID
+	private long video_id;
+	// 视频类型
+	private String video_type;
 	// 视频的记录起始时间
 	private Date video_time_start;
-	// 视频的记录结束时间，秒
+	// 视频的记录结束时间
 	private Date video_time_end;
-	// 视频持续时间
+	// 视频持续时间，秒
 	private int video_time_duration;
 	// 视频所在存储服务器IP
 	private String video_ip;
@@ -43,6 +47,8 @@ public class FrameRecord implements Serializable {
 	private String road_name_start;
 	// 视频设备所在道路结束地址
 	private String road_name_end;
+	// 视频设备所在道路类型
+	private int road_type;
 	// 视频设备所在的经度
 	private double longitude;
 	// 视频设备所在的维度
@@ -61,6 +67,8 @@ public class FrameRecord implements Serializable {
 		this.frame_index = builder.frame_index;
 		this.frame_cache_ip = builder.frame_cache_ip;
 		this.frame_url = builder.frame_url;
+		this.video_id = builder.video_id;
+		this.video_type = builder.video_type;
 		this.video_time_start = builder.video_time_start;
 		this.video_time_end = builder.video_time_end;
 		this.video_time_duration = builder.video_time_duration;
@@ -71,6 +79,7 @@ public class FrameRecord implements Serializable {
 		this.road_name = builder.road_name;
 		this.road_name_start = builder.road_name_start;
 		this.road_name_end = builder.road_name_end;
+		this.road_type = builder.road_type;
 		this.longitude = builder.longitude;
 		this.latitude = builder.latitude;
 		this.timestamp = builder.timestamp;
@@ -79,21 +88,24 @@ public class FrameRecord implements Serializable {
 	@Override
 	public String toString() {
 		return "FrameRecord [id=" + id + ", frame_content=" + frame_content + ", frame_index=" + frame_index
-				+ ", frame_cache_ip=" + frame_cache_ip + ", frame_url=" + frame_url + ", video_time_start="
-				+ video_time_start + ", video_time_end=" + video_time_end + ", video_time_duration="
-				+ video_time_duration + ", video_ip=" + video_ip + ", video_dir=" + video_dir + ", video_name="
-				+ video_name + ", road_id=" + road_id + ", road_name=" + road_name + ", road_name_start="
-				+ road_name_start + ", road_name_end=" + road_name_end + ", longitude=" + longitude + ", latitude="
-				+ latitude + ", timestamp=" + timestamp + "]";
+				+ ", frame_cache_ip=" + frame_cache_ip + ", frame_url=" + frame_url + ", video_id=" + video_id
+				+ ", video_type=" + video_type + ", video_time_start=" + video_time_start + ", video_time_end="
+				+ video_time_end + ", video_time_duration=" + video_time_duration + ", video_ip=" + video_ip
+				+ ", video_dir=" + video_dir + ", video_name=" + video_name + ", road_id=" + road_id + ", road_name="
+				+ road_name + ", road_name_start=" + road_name_start + ", road_name_end=" + road_name_end
+				+ ", road_type=" + road_type + ", longitude=" + longitude + ", latitude=" + latitude + ", timestamp="
+				+ timestamp + "]";
 	}
 
 	public static class Builder {
 
-		private String id;
-		private String frame_content;
-		private int frame_index;
+		private final String id;
+		private final String frame_content;
+		private final int frame_index;
 		private String frame_cache_ip = "";
 		private String frame_url = "";
+		private final long video_id;
+		private String video_type = "ts";
 		private Date video_time_start = null;
 		private Date video_time_end = null;
 		private int video_time_duration;
@@ -104,14 +116,16 @@ public class FrameRecord implements Serializable {
 		private String road_name = "";
 		private String road_name_start = "";
 		private String road_name_end = "";
+		private int road_type = 1;
 		private double longitude;
 		private double latitude;
 		private Date timestamp = new Date();
 
-		public Builder(String id, String frame_content, int frame_index) {
+		public Builder(String id, String frame_content, int frame_index, long video_id) {
 			this.id = id;
 			this.frame_content = frame_content;
 			this.frame_index = frame_index;
+			this.video_id = video_id;
 		}
 
 		public Builder setFrame_cache_ip(String frame_cache_ip) {
@@ -121,6 +135,11 @@ public class FrameRecord implements Serializable {
 
 		public Builder setFrame_url(String frame_url) {
 			this.frame_url = frame_url;
+			return this;
+		}
+
+		public Builder setVideo_type(String video_type) {
+			this.video_type = video_type;
 			return this;
 		}
 
@@ -171,6 +190,11 @@ public class FrameRecord implements Serializable {
 
 		public Builder setRoad_name_end(String road_name_end) {
 			this.road_name_end = road_name_end;
+			return this;
+		}
+
+		public Builder setRoad_type(int road_type) {
+			this.road_type = road_type;
 			return this;
 		}
 
@@ -233,6 +257,22 @@ public class FrameRecord implements Serializable {
 
 	public void setFrame_url(String frame_url) {
 		this.frame_url = frame_url;
+	}
+
+	public long getVideo_id() {
+		return video_id;
+	}
+
+	public void setVideo_id(long video_id) {
+		this.video_id = video_id;
+	}
+
+	public String getVideo_type() {
+		return video_type;
+	}
+
+	public void setVideo_type(String video_type) {
+		this.video_type = video_type;
 	}
 
 	public Date getVideo_time_start() {
@@ -313,6 +353,14 @@ public class FrameRecord implements Serializable {
 
 	public void setRoad_name_end(String road_name_end) {
 		this.road_name_end = road_name_end;
+	}
+
+	public int getRoad_type() {
+		return road_type;
+	}
+
+	public void setRoad_type(int road_type) {
+		this.road_type = road_type;
 	}
 
 	public double getLongitude() {
