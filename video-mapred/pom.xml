@@ -13,6 +13,12 @@
 	<name>Video MapRed</name>
 
 	<dependencies>
+		<!-- 子项目 -->
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>video-shrink</artifactId>
+			<version>${project.version}</version>
+		</dependency>
 		<!-- Jackson组件 -->
 		<dependency>
 			<groupId>org.codehaus.jackson</groupId>
@@ -123,7 +129,7 @@
 					</descriptors>
 					<archive>
 						<manifest>
-							<mainClass>zx.soft.hdfs.wm.HdfsWaterMarking</mainClass>
+							<mainClass>info.hb.video.mapred.driver.VideoMapredDriver</mainClass>
 						</manifest>
 					</archive>
 					<descriptorRefs>

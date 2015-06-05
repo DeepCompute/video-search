@@ -11,7 +11,7 @@ import org.apache.hadoop.mapreduce.TaskAttemptContext;
 
 /**
  * 根读取类
- * 
+ *
  * @author wgybzb
  *
  */
@@ -27,7 +27,7 @@ public class StubReader extends RecordReader<Text, Text> {
 	@Override
 	public void initialize(InputSplit inputSplit, TaskAttemptContext taskAttemptContext) throws IOException,
 			InterruptedException {
-		// No op
+		// TODO
 	}
 
 	@Override
@@ -56,7 +56,7 @@ public class StubReader extends RecordReader<Text, Text> {
 
 	@Override
 	public void close() throws IOException {
-		// No op
+		// TODO
 	}
 
 }

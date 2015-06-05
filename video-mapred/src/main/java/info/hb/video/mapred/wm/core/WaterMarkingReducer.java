@@ -16,7 +16,7 @@ import org.apache.hadoop.mapreduce.Reducer;
 
 /**
  * 水印Reducer
- * 
+ *
  * @author wgybzb
  *
  */
@@ -48,6 +48,7 @@ public class WaterMarkingReducer extends Reducer<Text, LongWritable, Text, LongW
 		for (File file : mappedFiles) {
 			file.delete();
 		}
+
 	}
 
 }

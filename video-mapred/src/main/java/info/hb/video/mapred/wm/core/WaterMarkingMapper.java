@@ -12,7 +12,7 @@ import org.apache.hadoop.mapreduce.Mapper;
 
 /**
  * 水印Mapper
- * 
+ *
  * @author wgybzb
  *
  */
@@ -20,6 +20,7 @@ public class WaterMarkingMapper extends Mapper<Text, Text, Text, LongWritable> {
 
 	@Override
 	protected void map(Text key, Text value, Context context) throws IOException, InterruptedException {
+
 		FFMPEGUtil.init();
 		Path partPath = new Path(value.toString());
 
@@ -31,6 +32,7 @@ public class WaterMarkingMapper extends Mapper<Text, Text, Text, LongWritable> {
 		FFMPEGUtil.applyWatermark(partIdx, jobUUID, configuration);
 
 		context.write(key, new LongWritable(partIdx));
+
 	}
 
 }
