@@ -44,6 +44,10 @@ public class Image2RiakCluster {
 	// 根据需求设置，确认是否是副本数
 	private final int QUORUM_SIZE;
 
+	// IP地址列表
+	private String ipsStr;
+	private String[] ips;
+
 	public Image2RiakCluster() {
 		try {
 			Properties props = ConfigUtil.getProps("riak.properties");
@@ -52,8 +56,9 @@ public class Image2RiakCluster {
 					.withMaxConnections(Integer.parseInt(props.getProperty("riak.max.connections")))
 					.withRemotePort(Integer.parseInt(props.getProperty("riak.port")));
 			//			builder.withAuth(props.getProperty("riak.username"), props.getProperty("riak.password"), null);
-			List<RiakNode> nodes = RiakNode.Builder.buildNodes(builder,
-					Arrays.asList(props.getProperty("riak.cluster").split(",")));
+			ipsStr = props.getProperty("riak.cluster");
+			ips = ipsStr.split(",");
+			List<RiakNode> nodes = RiakNode.Builder.buildNodes(builder, Arrays.asList(ips));
 			QUORUM_SIZE = nodes.size();
 			cluster = new RiakCluster.Builder(nodes).build();
 			cluster.start();
@@ -62,6 +67,14 @@ public class Image2RiakCluster {
 			logger.error("Exception:{}", LogbackUtil.expection2Str(e));
 			throw new RuntimeException(e);
 		}
+	}
+
+	public String getIpsStr() {
+		return ipsStr;
+	}
+
+	public String[] getIps() {
+		return ips;
 	}
 
 	/**
@@ -137,7 +150,8 @@ public class Image2RiakCluster {
 
 	public void close() {
 		client.shutdown();
-		cluster.shutdown();
+		// 不能关闭
+		//		cluster.shutdown();
 	}
 
 }

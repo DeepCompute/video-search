@@ -23,6 +23,11 @@
 			<artifactId>video-model</artifactId>
 			<version>${project.version}</version>
 		</dependency>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>video-riak</artifactId>
+			<version>${project.version}</version>
+		</dependency>
 		<!-- HumbleVideo处理库 -->
 		<dependency>
 			<groupId>io.humble</groupId>

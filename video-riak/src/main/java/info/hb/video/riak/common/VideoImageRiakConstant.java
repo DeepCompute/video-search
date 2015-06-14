@@ -10,4 +10,6 @@ public class VideoImageRiakConstant {
 
 	public static final String IMAGE_BUCKET_TYPE = "image_type";
 
+	public static final int HTTP_PORT = 8098;
+
 }

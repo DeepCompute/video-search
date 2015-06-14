@@ -2,12 +2,16 @@ package info.hb.video.shrink.core;
 
 import info.hb.video.model.frame.FrameRecord;
 import info.hb.video.model.name.VideoName;
+import info.hb.video.riak.client.Image2RiakCluster;
+import info.hb.video.riak.common.VideoImageRiakConstant;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Random;
 
+import org.openimaj.image.ImageUtilities;
 import org.openimaj.image.MBFImage;
 import org.openimaj.video.Video;
 import org.openimaj.video.xuggle.XuggleVideo;
@@ -26,20 +30,19 @@ public class Video2Text {
 
 	private static Logger logger = LoggerFactory.getLogger(Video2Text.class);
 
-	private static final String IMAGE_SUFFIX = ".png";
+	private static final String IMAGE_SUFFIX = "png";
 
-	/**
-	 * 测试函数
-	 */
-	public static void main(String[] args) {
+	private static final String BUCKET_NAME = "frames";
 
-		String videoFile = "/home/wanggang/develop/deeplearning/sample-videos/A003-G昭亭路-文鼎路3文鼎路东-1-20150326205000-20150326205939-195056832.ts";
-		List<FrameRecord> frames = Video2Text.video2Text(videoFile);
-		System.out.println(frames.size());
-		//		System.out.println(JsonUtils.toJson(frames));
+	private static final Random RANDOM = new Random();
+
+	private Image2RiakCluster cluster;
+
+	public Video2Text() {
+		cluster = new Image2RiakCluster();
 	}
 
-	public static List<FrameRecord> video2Text(String videoFile) {
+	public List<FrameRecord> video2Text(String videoFile) {
 		List<FrameRecord> result = new ArrayList<>();
 		try (Video<MBFImage> frames = new XuggleVideo(new File(videoFile));) {
 			long current = System.currentTimeMillis();
@@ -56,6 +59,14 @@ public class Video2Text {
 				System.err.println(index);
 				// id是根据videoName+frame_index进行MD5得到的
 				String id = CheckSumUtils.getMD5(vname + index);
+				/**
+				 * 存储关键帧到Riak中
+				 */
+				// TODO 需要图片压缩
+				//
+				// 存储PNG到Riak
+				cluster.writeImage(VideoImageRiakConstant.IMAGE_BUCKET_TYPE, BUCKET_NAME, id + "." + IMAGE_SUFFIX,
+						ImageUtilities.createBufferedImageForDisplay(mbfImage), IMAGE_SUFFIX);
 				// 视频帧缓存的服务器IP，待完善
 				// 视频帧的存储地址，待完善
 				// 视频所在存储服务器IP，待完善
@@ -65,8 +76,8 @@ public class Video2Text {
 				frameRecord = new FrameRecord.Builder(id, Image2Text.image2Text(mbfImage), index,
 						videoName.getVideo_id())
 						.setVideo_type(videoName.getVideo_type())
-						.setFrame_cache_ip("192.168.31.15")
-						.setFrame_url("http://192.168.31.15/video/frames/" + id + IMAGE_SUFFIX)
+						.setFrame_cache_ip(cluster.getIpsStr())
+						.setFrame_url(getFrameUrl(id))
 						.setVideo_time_start(new Date(videoName.getVideo_time_start()))
 						.setVideo_time_end(new Date(videoName.getVideo_time_end()))
 						.setVideo_time_duration(
@@ -81,9 +92,21 @@ public class Video2Text {
 				// 添加到列表中
 				result.add(frameRecord);
 				index++;
+				//				if (index == 100) {
+				//					break;
+				//				}
 			}
 		}
 		return result;
+	}
+
+	private String getFrameUrl(String id) {
+		return "http://" + cluster.getIps()[RANDOM.nextInt(cluster.getIps().length)] + ":"
+				+ VideoImageRiakConstant.HTTP_PORT + "/riak/" + BUCKET_NAME + "/" + id + "." + IMAGE_SUFFIX;
+	}
+
+	public void close() {
+		cluster.close();
 	}
 
 }

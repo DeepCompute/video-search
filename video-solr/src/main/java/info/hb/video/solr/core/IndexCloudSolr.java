@@ -45,6 +45,19 @@ public class IndexCloudSolr {
 		cloudServer.connect();
 	}
 
+	public void deleteQuery(String q) {
+		try {
+			cloudServer.deleteByQuery(q);
+			cloudServer.commit();
+		} catch (SolrServerException e) {
+			logger.error("Exception:{}", LogbackUtil.expection2Str(e));
+			e.printStackTrace();
+		} catch (IOException e) {
+			logger.error("Exception:{}", LogbackUtil.expection2Str(e));
+			e.printStackTrace();
+		}
+	}
+
 	public void addDocsToSolr(List<FrameRecord> records) {
 		if (records.size() == 0) {
 			return;
