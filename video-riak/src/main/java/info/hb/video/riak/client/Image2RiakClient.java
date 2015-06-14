@@ -4,8 +4,6 @@ import info.hb.video.riak.utils.ImageUtils;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Properties;
 import java.util.concurrent.ExecutionException;
 
@@ -21,40 +19,26 @@ import com.basho.riak.client.api.commands.kv.DeleteValue;
 import com.basho.riak.client.api.commands.kv.FetchValue;
 import com.basho.riak.client.api.commands.kv.StoreValue;
 import com.basho.riak.client.api.commands.kv.StoreValue.Option;
-import com.basho.riak.client.core.RiakCluster;
-import com.basho.riak.client.core.RiakNode;
 import com.basho.riak.client.core.query.Location;
 import com.basho.riak.client.core.query.Namespace;
 import com.basho.riak.client.core.query.RiakObject;
 import com.basho.riak.client.core.util.BinaryValue;
 
-/**
- * 图片存储Riak集群客户端
- *
- * @author wanggang
- *
- */
-public class Image2RiakCluster {
+public class Image2RiakClient {
 
-	private static Logger logger = LoggerFactory.getLogger(Image2RiakCluster.class);
+	private static Logger logger = LoggerFactory.getLogger(Image2RiakClient.class);
 
 	private RiakClient client;
 
 	// 根据需求设置，确认是否是副本数
 	private final int QUORUM_SIZE;
 
-	public Image2RiakCluster() {
+	public Image2RiakClient() {
 		try {
 			Properties props = ConfigUtil.getProps("riak.properties");
-			RiakNode.Builder builder = new RiakNode.Builder();
-			builder.withMinConnections(Integer.parseInt(props.getProperty("riak.min.connections")));
-			builder.withMaxConnections(Integer.parseInt(props.getProperty("riak.max.connections")));
-			List<RiakNode> nodes = RiakNode.Builder.buildNodes(builder,
-					Arrays.asList(props.getProperty("riak.cluster").split(",")));
-			QUORUM_SIZE = nodes.size();
-			RiakCluster cluster = new RiakCluster.Builder(nodes).build();
-			cluster.start();
-			client = new RiakClient(cluster);
+			String[] nodes = props.getProperty("riak.cluster").split(",");
+			QUORUM_SIZE = nodes.length;
+			client = RiakClient.newClient(nodes);
 		} catch (Exception e) {
 			logger.error("Exception:{}", LogbackUtil.expection2Str(e));
 			throw new RuntimeException(e);
@@ -63,10 +47,6 @@ public class Image2RiakCluster {
 
 	/**
 	 * 参考配置文件：http://riak.com.cn/riak/latest/ops/advanced/configs/configuration-files/
-	 *
-	 * @param bucketType 任意的字符串，主要用于管理统一类数据的配置信息
-	 * @param bucketName 相当于DBMS中的数据表名字
-	 * @param key  键名
 	 */
 	public void writeImage(String bucketType, String bucketName, String key, BufferedImage bi, String format) {
 		try {
@@ -89,6 +69,8 @@ public class Image2RiakCluster {
 					.withOption(Option.W, new Quorum(QUORUM_SIZE)).build();
 			client.execute(store);
 		} catch (ExecutionException | InterruptedException | IOException e) {
+			logger.error("Exception:{}", LogbackUtil.expection2Str(e));
+			// 注意：项目稳定时，需要把抛出异常去掉，防止因个别异常线程停止
 			throw new RuntimeException(e);
 		}
 	}

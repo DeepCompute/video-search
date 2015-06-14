@@ -1,4 +1,4 @@
-package info.hb.video.riak.client;
+package info.hb.video.riak.sample;
 
 import java.net.UnknownHostException;
 
@@ -13,7 +13,7 @@ import com.basho.riak.client.core.query.Namespace;
 import com.basho.riak.client.core.query.RiakObject;
 import com.basho.riak.client.core.util.BinaryValue;
 
-public class TasteOfRiak {
+public class TasteOfRiakDemo {
 
 	// 基本的POJO类演示Riak中的类型交换
 	public static class Book {
