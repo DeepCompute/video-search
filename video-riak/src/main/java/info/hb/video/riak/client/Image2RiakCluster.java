@@ -38,6 +38,7 @@ public class Image2RiakCluster {
 
 	private static Logger logger = LoggerFactory.getLogger(Image2RiakCluster.class);
 
+	private RiakCluster cluster;
 	private RiakClient client;
 
 	// 根据需求设置，确认是否是副本数
@@ -46,13 +47,15 @@ public class Image2RiakCluster {
 	public Image2RiakCluster() {
 		try {
 			Properties props = ConfigUtil.getProps("riak.properties");
-			RiakNode.Builder builder = new RiakNode.Builder();
-			builder.withMinConnections(Integer.parseInt(props.getProperty("riak.min.connections")));
-			builder.withMaxConnections(Integer.parseInt(props.getProperty("riak.max.connections")));
+			RiakNode.Builder builder = new RiakNode.Builder()
+					.withMinConnections(Integer.parseInt(props.getProperty("riak.min.connections")))
+					.withMaxConnections(Integer.parseInt(props.getProperty("riak.max.connections")))
+					.withRemotePort(Integer.parseInt(props.getProperty("riak.port")));
+			//			builder.withAuth(props.getProperty("riak.username"), props.getProperty("riak.password"), null);
 			List<RiakNode> nodes = RiakNode.Builder.buildNodes(builder,
 					Arrays.asList(props.getProperty("riak.cluster").split(",")));
 			QUORUM_SIZE = nodes.size();
-			RiakCluster cluster = new RiakCluster.Builder(nodes).build();
+			cluster = new RiakCluster.Builder(nodes).build();
 			cluster.start();
 			client = new RiakClient(cluster);
 		} catch (Exception e) {
@@ -134,6 +137,7 @@ public class Image2RiakCluster {
 
 	public void close() {
 		client.shutdown();
+		cluster.shutdown();
 	}
 
 }
