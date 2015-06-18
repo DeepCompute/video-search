@@ -59,7 +59,8 @@ public class Image2RiakCluster {
 			ipsStr = props.getProperty("riak.cluster");
 			ips = ipsStr.split(",");
 			List<RiakNode> nodes = RiakNode.Builder.buildNodes(builder, Arrays.asList(ips));
-			QUORUM_SIZE = nodes.size();
+			// 法定数要多于一半的节点
+			QUORUM_SIZE = nodes.size() / 2 + 1;
 			cluster = new RiakCluster.Builder(nodes).build();
 			cluster.start();
 			client = new RiakClient(cluster);
@@ -79,6 +80,7 @@ public class Image2RiakCluster {
 
 	/**
 	 * 参考配置文件：http://riak.com.cn/riak/latest/ops/advanced/configs/configuration-files/
+	 * 注意：对于我们的视频帧存储Riak场景，要求写速度非常快，查询很少，那么W=1,R=N更合适，不需要使用法定值
 	 *
 	 * @param bucketType 任意的字符串，主要用于管理统一类数据的配置信息
 	 * @param bucketName 相当于DBMS中的数据表名字
