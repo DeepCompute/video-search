@@ -2,7 +2,7 @@ package info.hb.video.solr.main;
 
 import info.hb.video.model.frame.FrameRecord;
 import info.hb.video.shrink.core.Video2Text;
-import info.hb.video.solr.core.IndexCloudSolr;
+import info.hb.video.solr.index.IndexCloudSolr;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package info.hb.video.solr.core;
+package info.hb.video.solr.index;
 
 import info.hb.video.model.frame.FrameRecord;
 
