@@ -1,9 +1,9 @@
 package info.hb.video.shrink.core;
 
+import info.hb.riak.cluster.client.HBRiakClient;
+import info.hb.riak.cluster.client.HBRiakClusterImpl;
 import info.hb.video.model.frame.FrameRecord;
 import info.hb.video.model.name.VideoName;
-import info.hb.video.riak.client.Image2RiakCluster;
-import info.hb.video.riak.common.VideoImageRiakConstant;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -34,12 +34,19 @@ public class Video2Text {
 
 	private static final String BUCKET_NAME = "frames";
 
+	public static final String IMAGE_BUCKET_TYPE = "default";
+
+	public static final int HTTP_PORT = 8098;
+
+	// 帧率
+	public static final int FRAME_RATE = 30;
+
 	private static final Random RANDOM = new Random();
 
-	private Image2RiakCluster cluster;
+	private HBRiakClient cluster;
 
 	public Video2Text() {
-		cluster = new Image2RiakCluster();
+		cluster = new HBRiakClusterImpl();
 	}
 
 	public List<FrameRecord> video2Text(String videoFile) {
@@ -57,6 +64,11 @@ public class Video2Text {
 			 */
 			for (MBFImage mbfImage : frames) {
 				System.err.println(index);
+				// 没帧率取1帧
+				if ((index - 1) % FRAME_RATE != 0) {
+					index++;
+					continue;
+				}
 				// id是根据videoName+frame_index进行MD5得到的
 				String id = CheckSumUtils.getMD5(vname + index);
 				/**
@@ -65,7 +77,7 @@ public class Video2Text {
 				// TODO 需要图片压缩
 				//
 				// 存储PNG到Riak
-				cluster.writeImage(VideoImageRiakConstant.IMAGE_BUCKET_TYPE, BUCKET_NAME, id + "." + IMAGE_SUFFIX,
+				cluster.writeImage(IMAGE_BUCKET_TYPE, BUCKET_NAME, id + "." + IMAGE_SUFFIX,
 						ImageUtilities.createBufferedImageForDisplay(mbfImage), IMAGE_SUFFIX);
 				// 视频帧缓存的服务器IP，待完善
 				// 视频帧的存储地址，待完善
@@ -101,8 +113,8 @@ public class Video2Text {
 	}
 
 	private String getFrameUrl(String id) {
-		return "http://" + cluster.getIps()[RANDOM.nextInt(cluster.getIps().length)] + ":"
-				+ VideoImageRiakConstant.HTTP_PORT + "/riak/" + BUCKET_NAME + "/" + id + "." + IMAGE_SUFFIX;
+		return "http://" + cluster.getIps()[RANDOM.nextInt(cluster.getIps().length)] + ":" + HTTP_PORT + "/riak/"
+				+ BUCKET_NAME + "/" + id + "." + IMAGE_SUFFIX;
 	}
 
 	public void close() {

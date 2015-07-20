@@ -24,9 +24,9 @@
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>${project.groupId}</groupId>
-			<artifactId>video-riak</artifactId>
-			<version>${project.version}</version>
+			<groupId>info.hb</groupId>
+			<artifactId>riak-cluster</artifactId>
+			<version>1.0.0</version>
 		</dependency>
 		<!-- HumbleVideo处理库 -->
 		<dependency>

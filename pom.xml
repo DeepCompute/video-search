@@ -22,7 +22,6 @@
 		<module>video-solr</module>
 		<module>video-model</module>
 		<module>video-shrink</module>
-		<module>video-riak</module>
 	</modules>
 
 	<dependencies>
