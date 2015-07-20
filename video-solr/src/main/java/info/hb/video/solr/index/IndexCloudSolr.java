@@ -29,13 +29,10 @@ public class IndexCloudSolr {
 
 	private static Logger logger = LoggerFactory.getLogger(IndexCloudSolr.class);
 
-	public static int FETCH_SIZE = 1_0000;
-
 	private final CloudSolrServer cloudServer;
 
 	public IndexCloudSolr() {
 		Properties props = ConfigUtil.getProps("solr.properties");
-		FETCH_SIZE = Integer.parseInt(props.getProperty("fetch_size"));
 		cloudServer = new CloudSolrServer(props.getProperty("zookeeper_cloud"));
 		cloudServer.setDefaultCollection(props.getProperty("collection"));
 		cloudServer.setIdField("id");
