@@ -16,7 +16,7 @@ public class VideoTackle {
 
 	public static void main(String[] args) {
 
-		Video<MBFImage> video = new XuggleVideo(new File("/home/wanggang/develop/deeplearning/test-videos/test1.ts"));
+		Video<MBFImage> video = new XuggleVideo(new File("/home/donglei/test-videos/test1.ts"));
 		System.out.println(video.countFrames());
 		for (MBFImage mbfImage : video) {
 			System.out.println(mbfImage.getHeight() + "," + mbfImage.getWidth());
