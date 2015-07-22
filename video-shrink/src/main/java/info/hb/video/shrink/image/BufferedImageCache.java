@@ -5,6 +5,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class BufferedImageCache {
+
 	private static List<BufferedImage> images = new LinkedList<>();
 
 	public static void addBufferedImage(BufferedImage image) {

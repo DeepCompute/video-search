@@ -7,6 +7,7 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 
 public class ImageUtils {
+
 	public static String dumpImageToFile(BufferedImage image, String output) {
 		try {
 			String outputFilename = output + System.currentTimeMillis() + ".png";

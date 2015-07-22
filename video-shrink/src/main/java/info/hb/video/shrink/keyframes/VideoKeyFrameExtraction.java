@@ -1,4 +1,4 @@
-package info.hb.video.shrink.image;
+package info.hb.video.shrink.keyframes;
 
 import info.hb.video.shrink.utils.ImageCompare;
 import info.hb.video.shrink.utils.ImageUtils;
@@ -16,12 +16,21 @@ import org.openimaj.video.xuggle.XuggleVideo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * 视频关键帧提取
+ *
+ * @author wanggang
+ *
+ */
 public class VideoKeyFrameExtraction {
+
 	private static Logger logger = LoggerFactory.getLogger(VideoKeyFrameExtraction.class);
+
 	public static void main(String[] args) {
 		long startTime = System.currentTimeMillis();
-		extractKeyFrame("/home/donglei/test-videos/test1.ts", "/home/donglei/test-videos/output");
-		logger.info("运行耗时：{}", System.currentTimeMillis() - startTime);
+		extractKeyFrame("/home/wanggang/develop/deeplearning/test-videos/test1.ts",
+				"/home/wanggang/develop/deeplearning/test-videos/output");
+		logger.info("Time spend：{}", System.currentTimeMillis() - startTime);
 	}
 
 	public static void extractKeyFrame(String path, String output) {
@@ -46,6 +55,7 @@ public class VideoKeyFrameExtraction {
 	}
 
 	private static class ExtractRunable implements Runnable {
+
 		private static Logger logger = LoggerFactory.getLogger(ExtractRunable.class);
 		private BufferedImage cmpImage;
 		private BufferedImage outputImage;

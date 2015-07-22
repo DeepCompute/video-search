@@ -9,7 +9,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Random;
 
 import org.openimaj.image.ImageUtilities;
 import org.openimaj.image.MBFImage;
@@ -38,10 +37,11 @@ public class Video2Text {
 
 	public static final int HTTP_PORT = 8098;
 
+	// Nginx代理服务器
+	public static final String NGINX_PROXY = "192.168.32.23:1888";
+
 	// 帧率
 	public static final int FRAME_RATE = 30;
-
-	private static final Random RANDOM = new Random();
 
 	private HBRiakClient cluster;
 
@@ -113,8 +113,7 @@ public class Video2Text {
 	}
 
 	private String getFrameUrl(String id) {
-		return "http://" + cluster.getIps()[RANDOM.nextInt(cluster.getIps().length)] + ":" + HTTP_PORT + "/riak/"
-				+ BUCKET_NAME + "/" + id + "." + IMAGE_SUFFIX;
+		return "http://" + NGINX_PROXY + "/riak/" + BUCKET_NAME + "/" + id + "." + IMAGE_SUFFIX;
 	}
 
 	public void close() {

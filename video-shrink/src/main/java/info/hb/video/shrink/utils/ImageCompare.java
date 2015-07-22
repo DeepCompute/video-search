@@ -5,16 +5,32 @@ import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.awt.image.Raster;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
 
 import javax.swing.GrayFilter;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import zx.soft.utils.log.LogbackUtil;
 
 import com.sun.image.codec.jpeg.JPEGCodec;
 import com.sun.image.codec.jpeg.JPEGEncodeParam;
 import com.sun.image.codec.jpeg.JPEGImageDecoder;
 import com.sun.image.codec.jpeg.JPEGImageEncoder;
 
+/**
+ * 图片相似度比较
+ *
+ * @author wanggang
+ *
+ */
+@SuppressWarnings("restriction")
 public class ImageCompare {
+
+	private static Logger logger = LoggerFactory.getLogger(ImageCompare.class);
 
 	protected BufferedImage img1 = null;
 	protected BufferedImage img2 = null;
@@ -23,15 +39,16 @@ public class ImageCompare {
 	protected int comparey = 0;
 	protected int factorA = 0;
 	protected int factorD = 10;
-	protected boolean match = false;
-	protected int debugMode = 0; // 1: textual indication of change, 2: difference of factors
+	protected boolean match = Boolean.FALSE;
+	// 1: textual indication of change, 2: difference of factors
+	protected int debugMode = 0;
 	private int diffMax = 0;
 
 	/* create a runable demo thing. */
 	public static void main(String[] args) {
 		// Create a compare object specifying the 2 images for comparison.
-		ImageCompare ic = new ImageCompare("/home/donglei/sample-videos/output1/thumbnails-01.jpeg",
-				"/home/donglei/sample-videos/output1/thumbnails-02.jpeg");
+		ImageCompare ic = new ImageCompare("/home/wanggang/develop/deeplearning/test-videos/output/thumbnails-01.jpeg",
+				"/home/wanggang/develop/deeplearning/test-videos/output/thumbnails-02.jpeg");
 		// Set the comparison parameters.
 		//   (num vertical regions, num horizontal regions, sensitivity, stabilizer)
 		ic.setParameters(80, 50, 50, 100);
@@ -104,7 +121,7 @@ public class ImageCompare {
 		int blocksx = img1.getWidth() / comparex;
 		int blocksy = img1.getHeight() / comparey;
 		// set to a match by default, if a change is found then flag non-match
-		this.match = true;
+		this.match = Boolean.TRUE;
 		// loop through whole image and compare individual blocks of images
 		for (int y = 0; y < comparey; y++) {
 			if (debugMode > 0) {
@@ -164,39 +181,29 @@ public class ImageCompare {
 	// write a buffered image to a jpeg file.
 	protected static void saveJPG(Image img, String filename) {
 		BufferedImage bi = imageToBufferedImage(img);
-		FileOutputStream out = null;
-		try {
-			out = new FileOutputStream(filename);
-		} catch (java.io.FileNotFoundException io) {
-			System.out.println("File Not Found");
-		}
-		JPEGImageEncoder encoder = JPEGCodec.createJPEGEncoder(out);
-		JPEGEncodeParam param = encoder.getDefaultJPEGEncodeParam(bi);
-		param.setQuality(0.8f, false);
-		encoder.setJPEGEncodeParam(param);
-		try {
+		try (FileOutputStream out = new FileOutputStream(filename);) {
+			JPEGImageEncoder encoder = JPEGCodec.createJPEGEncoder(out);
+			JPEGEncodeParam param = encoder.getDefaultJPEGEncodeParam(bi);
+			param.setQuality(0.8f, false);
+			encoder.setJPEGEncodeParam(param);
 			encoder.encode(bi);
-			out.close();
-		} catch (java.io.IOException io) {
-			System.out.println("IOException");
+		} catch (FileNotFoundException e) {
+			logger.error("File Not Found");
+		} catch (IOException e) {
+			logger.error("Exception:{}", LogbackUtil.expection2Str(e));
 		}
 	}
 
 	// read a jpeg file into a buffered image
 	protected static Image loadJPG(String filename) {
-		FileInputStream in = null;
-		try {
-			in = new FileInputStream(filename);
-		} catch (java.io.FileNotFoundException io) {
-			System.out.println("File Not Found");
-		}
-		JPEGImageDecoder decoder = JPEGCodec.createJPEGDecoder(in);
 		BufferedImage bi = null;
-		try {
+		try (FileInputStream in = new FileInputStream(filename);) {
+			JPEGImageDecoder decoder = JPEGCodec.createJPEGDecoder(in);
 			bi = decoder.decodeAsBufferedImage();
-			in.close();
-		} catch (java.io.IOException io) {
-			System.out.println("IOException");
+		} catch (FileNotFoundException e) {
+			logger.error("File Not Found");
+		} catch (IOException e) {
+			logger.error("Exception:{}", LogbackUtil.expection2Str(e));
 		}
 		return bi;
 	}
