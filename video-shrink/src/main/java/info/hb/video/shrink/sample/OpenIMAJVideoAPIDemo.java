@@ -19,7 +19,7 @@ public class OpenIMAJVideoAPIDemo implements VideoDisplayListener<MBFImage> {
 
 	public OpenIMAJVideoAPIDemo() {
 		try {
-			XuggleVideo v = new XuggleVideo(new File("sample-videos/test6.mp4"));
+			XuggleVideo v = new XuggleVideo(new File("/home/donglei/test-videos/test6.mp4"));
 			//			VideoCapture v = new VideoCapture(320, 240);
 			VideoDisplay<MBFImage> vd = VideoDisplay.createVideoDisplay(v);
 			vd.addVideoListener(this);

@@ -5,9 +5,9 @@ import com.xuggle.xuggler.IContainer;
 import com.xuggle.xuggler.IStream;
 import com.xuggle.xuggler.IStreamCoder;
 
-public class XuggleDemo {
+public class VideoManipulation {
 
-	private static final String filename = "/Users/zhaoxm/InBUPT/test_videos/te2.avi";
+	private static final String filename = "/home/donglei/test-videos/test1.ts";
 
 	public static void main(String[] args) {
 
