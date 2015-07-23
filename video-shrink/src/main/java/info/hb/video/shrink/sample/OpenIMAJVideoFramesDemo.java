@@ -27,10 +27,13 @@ public class OpenIMAJVideoFramesDemo {
 			}
 
 		});
+
 		//		for (MBFImage mbfImage : video) {
 		//			System.out.println(video.getCurrentFrameIndex());
 		//			DisplayUtilities.displayName(mbfImage.process(new CannyEdgeDetector()), "videoFrames");
 		//		}
+		//		video.close();
+
 		// Iterator
 		//		Iterator<MBFImage> iterator = video.iterator();
 		//		while (iterator.hasNext()) {
