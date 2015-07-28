@@ -1,4 +1,4 @@
-package info.hb.video.shrink.videosummary;
+package info.hb.video.shrink.summary;
 
 import java.io.File;
 import java.io.FileNotFoundException;
