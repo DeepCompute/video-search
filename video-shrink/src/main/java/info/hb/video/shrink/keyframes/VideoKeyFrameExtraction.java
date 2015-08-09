@@ -1,6 +1,5 @@
 package info.hb.video.shrink.keyframes;
 
-import info.hb.video.shrink.utils.ImageCompare;
 import info.hb.video.shrink.utils.ImageUtils;
 
 import java.awt.image.BufferedImage;

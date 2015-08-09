@@ -1,4 +1,4 @@
-package info.hb.video.shrink.utils;
+package info.hb.video.shrink.keyframes;
 
 import java.awt.Graphics2D;
 import java.awt.Image;
@@ -40,27 +40,13 @@ public class ImageCompare {
 	protected int factorA = 0;
 	protected int factorD = 10;
 	protected boolean match = Boolean.FALSE;
-	// 1: textual indication of change, 2: difference of factors
+	// 0：默认不调试，1: 纹理迹象改变（textual indication of change）, 2: 不同区域（difference of factors）
 	protected int debugMode = 0;
 	private int diffMax = 0;
 
-	/* create a runable demo thing. */
-	public static void main(String[] args) {
-		// Create a compare object specifying the 2 images for comparison.
-		ImageCompare ic = new ImageCompare("/home/wanggang/develop/deeplearning/test-videos/output/thumbnails-01.jpeg",
-				"/home/wanggang/develop/deeplearning/test-videos/output/thumbnails-02.jpeg");
-		// Set the comparison parameters.
-		//   (num vertical regions, num horizontal regions, sensitivity, stabilizer)
-		ic.setParameters(80, 50, 50, 100);
-		// Display some indication of the differences in the image.
-		ic.setDebugMode(0);
-		// Compare.
-		ic.compare();
-		// Display if these images are considered a match according to our parameters.
-		System.out.println("Match: " + ic.match());
-		System.out.println(ic.diffMax);
-	}
-
+	/**
+	 * 对比两幅图片是否相似，静态方法
+	 */
 	public static boolean matchImage(BufferedImage image1, BufferedImage image2) {
 		ImageCompare ic = new ImageCompare(image1, image2);
 		// Set the comparison parameters.

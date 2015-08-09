@@ -50,6 +50,10 @@ public class Video2Text {
 	}
 
 	public List<FrameRecord> video2Text(String videoFile) {
+
+		// 将视频转换成MP4格式，并写入到Riak中
+
+		// 分析视频帧，写入到Solr中
 		List<FrameRecord> result = new ArrayList<>();
 		try (Video<MBFImage> frames = new XuggleVideo(new File(videoFile));) {
 			long current = System.currentTimeMillis();
@@ -64,7 +68,7 @@ public class Video2Text {
 			 */
 			for (MBFImage mbfImage : frames) {
 				System.err.println(index);
-				// 没帧率取1帧
+				// 每帧率取1帧
 				if ((index - 1) % FRAME_RATE != 0) {
 					index++;
 					continue;
@@ -94,8 +98,8 @@ public class Video2Text {
 						.setVideo_time_end(new Date(videoName.getVideo_time_end()))
 						.setVideo_time_duration(
 								(int) (videoName.getVideo_time_end() - videoName.getVideo_time_start()) / 1000)
-						.setVideo_ip("192.168.31.15").setVideo_dir("/home/videos/samples-videos").setVideo_name(vname)
-						.setRoad_id(videoName.getRoad_id()).setRoad_name(videoName.getRoad_name())
+						.setVideo_ip("192.168.31.15").setVideo_dir("http://192.168.32.23:1888/riak/videos/test11")
+						.setVideo_name(vname).setRoad_id(videoName.getRoad_id()).setRoad_name(videoName.getRoad_name())
 						.setRoad_name_start(videoName.getRoad_name_start())
 						.setRoad_name_end(videoName.getRoad_name_end()).setRoad_type(videoName.getRoad_type())
 						.setLongitude(-120.36365d).setLatitude(10.23365d).setTimestamp(new Date(current))
@@ -104,7 +108,7 @@ public class Video2Text {
 				// 添加到列表中
 				result.add(frameRecord);
 				index++;
-				//				if (index == 100) {
+				//				if (index > 100) {
 				//					break;
 				//				}
 			}

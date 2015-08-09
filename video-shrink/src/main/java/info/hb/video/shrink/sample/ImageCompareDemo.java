@@ -32,11 +32,10 @@ public class ImageCompareDemo {
 	protected int factorA = 0;
 	protected int factorD = 10;
 	protected boolean match = false;
-	// 1: textual indication of change, 2: difference of factors
+	// 0：默认不调试，1: 纹理迹象改变（textual indication of change）, 2: 不同区域（difference of factors）
 	protected int debugMode = 0;
 	private int diffMax = 0;
 
-	/* create a runable demo thing. */
 	public static void main(String[] args) {
 		// Create a compare object specifying the 2 images for comparison.
 		ImageCompareDemo ic = new ImageCompareDemo(
@@ -46,7 +45,7 @@ public class ImageCompareDemo {
 		//   (num vertical regions, num horizontal regions, sensitivity, stabilizer)
 		ic.setParameters(80, 50, 10, 100);
 		// Display some indication of the differences in the image.
-		ic.setDebugMode(2);
+		ic.setDebugMode(1);
 		// Compare.
 		ic.compare();
 		// Display if these images are considered a match according to our parameters.
