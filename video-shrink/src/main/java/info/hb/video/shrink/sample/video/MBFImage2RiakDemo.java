@@ -1,4 +1,4 @@
-package info.hb.video.shrink.sample;
+package info.hb.video.shrink.sample.video;
 
 import info.hb.riak.cluster.client.HBRiakClient;
 import info.hb.riak.cluster.client.HBRiakClusterImpl;

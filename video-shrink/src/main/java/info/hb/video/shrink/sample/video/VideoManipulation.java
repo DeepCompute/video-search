@@ -1,4 +1,4 @@
-package info.hb.video.shrink.sample;
+package info.hb.video.shrink.sample.video;
 
 import com.xuggle.xuggler.ICodec;
 import com.xuggle.xuggler.IContainer;

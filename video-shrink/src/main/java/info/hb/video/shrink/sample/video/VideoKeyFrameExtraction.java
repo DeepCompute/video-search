@@ -1,4 +1,4 @@
-package info.hb.video.shrink.sample;
+package info.hb.video.shrink.sample.video;
 
 import java.io.InputStreamReader;
 import java.io.LineNumberReader;
