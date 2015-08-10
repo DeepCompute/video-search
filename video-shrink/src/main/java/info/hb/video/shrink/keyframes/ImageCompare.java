@@ -35,9 +35,13 @@ public class ImageCompare {
 	protected BufferedImage img1 = null;
 	protected BufferedImage img2 = null;
 	protected BufferedImage imgc = null;
+	// 垂直区域个数
 	protected int comparex = 0;
+	// 水平区域个数
 	protected int comparey = 0;
+	// 敏感值（sensitivity）
 	protected int factorA = 0;
+	// 稳定值（stabilizer）
 	protected int factorD = 10;
 	protected boolean match = Boolean.FALSE;
 	// 0：默认不调试，1: 纹理迹象改变（textual indication of change）, 2: 不同区域（difference of factors）
@@ -49,35 +53,34 @@ public class ImageCompare {
 	 */
 	public static boolean matchImage(BufferedImage image1, BufferedImage image2) {
 		ImageCompare ic = new ImageCompare(image1, image2);
-		// Set the comparison parameters.
-		//   (num vertical regions, num horizontal regions, sensitivity, stabilizer)
+		// 设置比较时参数
 		ic.setParameters(80, 50, 5, 100);
-		// Display some indication of the differences in the image.
+		// 设置Debug模式
 		ic.setDebugMode(0);
-		// Compare.
+		// 比较操作
 		ic.compare();
-		// Display if these images are considered a match according to our parameters.
+		// 返回比较结果
 		return ic.match();
 	}
 
-	// constructor 1. use filenames
+	// 构造函数：传入文件名
 	public ImageCompare(String file1, String file2) {
 		this(loadJPG(file1), loadJPG(file2));
 	}
 
-	// constructor 2. use awt images.
+	// 构造函数：传入Image
 	public ImageCompare(Image img1, Image img2) {
 		this(imageToBufferedImage(img1), imageToBufferedImage(img2));
 	}
 
-	// constructor 3. use buffered images. all roads lead to the same place. this place.
+	// 构造函数：传入BI
 	public ImageCompare(BufferedImage img1, BufferedImage img2) {
 		this.img1 = img1;
 		this.img2 = img2;
 		autoSetParameters();
 	}
 
-	// like this to perhaps be upgraded to something more heuristic in the future.
+	// 默认参数
 	protected void autoSetParameters() {
 		comparex = 10;
 		comparey = 10;
@@ -85,7 +88,7 @@ public class ImageCompare {
 		factorD = 10;
 	}
 
-	// set the parameters for use during change detection.
+	// 在异同检测过程中使用的参数
 	public void setParameters(int x, int y, int factorA, int factorD) {
 		this.comparex = x;
 		this.comparey = y;
@@ -93,22 +96,22 @@ public class ImageCompare {
 		this.factorD = factorD;
 	}
 
-	// want to see some stuff in the console as the comparison is happening?
+	// 进行比较过程时，设置Debug模式来观察输出情况，了解比较过程
 	public void setDebugMode(int m) {
 		this.debugMode = m;
 	}
 
-	// compare the two images in this object.
+	// 对比图片
 	public void compare() {
-		// convert to gray images.
+		// 转换成灰度图
 		img1 = imageToBufferedImage(GrayFilter.createDisabledImage(img1));
 		img2 = imageToBufferedImage(GrayFilter.createDisabledImage(img2));
-		// how big are each section
+		// x,y每块（段）的大小
 		int blocksx = img1.getWidth() / comparex;
 		int blocksy = img1.getHeight() / comparey;
-		// set to a match by default, if a change is found then flag non-match
+		// 设置默认为匹配，如果找到变换区域则修改为不匹配
 		this.match = Boolean.TRUE;
-		// loop through whole image and compare individual blocks of images
+		// 循环整个图片，对比两幅图片的各自区域块
 		for (int y = 0; y < comparey; y++) {
 			if (debugMode > 0) {
 				System.out.print("|");
@@ -117,7 +120,8 @@ public class ImageCompare {
 				int b1 = getAverageBrightness(img1.getSubimage(x * blocksx, y * blocksy, blocksx - 1, blocksy - 1));
 				int b2 = getAverageBrightness(img2.getSubimage(x * blocksx, y * blocksy, blocksx - 1, blocksy - 1));
 				int diff = Math.abs(b1 - b2);
-				if (diff > factorA) { // the difference in a certain region has passed the threshold value of factorA
+				// 在确定区域的异同，通过factorA阈值来筛选
+				if (diff > factorA) {
 					this.diffMax = this.diffMax > diff ? this.diffMax : diff;
 					this.match = false;
 				}
@@ -134,12 +138,12 @@ public class ImageCompare {
 		}
 	}
 
-	// return the image that indicates the regions where changes where detected.
+	// 返回含有检测到区域变化图片
 	public BufferedImage getChangeIndicator() {
 		return imgc;
 	}
 
-	// returns a value specifying some kind of average brightness in the image.
+	// 获取指定的平均亮度值
 	protected int getAverageBrightness(BufferedImage img) {
 		Raster r = img.getData();
 		int total = 0;
@@ -151,12 +155,12 @@ public class ImageCompare {
 		return total / ((r.getWidth() / factorD) * (r.getHeight() / factorD));
 	}
 
-	// returns true if image pair is considered a match
+	// 返回两幅副片是否相互匹配
 	public boolean match() {
 		return this.match;
 	}
 
-	// buffered images are just better.
+	// 将Image转换为Buffered Image
 	protected static BufferedImage imageToBufferedImage(Image img) {
 		BufferedImage bi = new BufferedImage(img.getWidth(null), img.getHeight(null), BufferedImage.TYPE_INT_RGB);
 		Graphics2D g2 = bi.createGraphics();
@@ -164,7 +168,7 @@ public class ImageCompare {
 		return bi;
 	}
 
-	// write a buffered image to a jpeg file.
+	// 将Buffered Image写到一个JPEG文件中
 	protected static void saveJPG(Image img, String filename) {
 		BufferedImage bi = imageToBufferedImage(img);
 		try (FileOutputStream out = new FileOutputStream(filename);) {
@@ -180,7 +184,7 @@ public class ImageCompare {
 		}
 	}
 
-	// read a jpeg file into a buffered image
+	// 读取JPEG文件为Buffered Image
 	protected static Image loadJPG(String filename) {
 		BufferedImage bi = null;
 		try (FileInputStream in = new FileInputStream(filename);) {
