@@ -4,32 +4,56 @@ import info.hb.video.model.frame.FrameRecord;
 import info.hb.video.shrink.core.Video2Text;
 import info.hb.video.solr.index.IndexCloudSolr;
 
+import java.io.File;
 import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import zx.soft.utils.system.ProcessAnalysis;
 
 public class ImportVideo2SolrCloud {
 
+	private static Logger logger = LoggerFactory.getLogger(ImportVideo2SolrCloud.class);
+
+	// Solr集群客户端
+	private IndexCloudSolr ics;
+	// 视频转换成文本
+	private Video2Text video2Text;
+
+	public ImportVideo2SolrCloud() {
+		ics = new IndexCloudSolr();
+		video2Text = new Video2Text();
+	}
+
+	/**
+	 * 主函数
+	 */
 	public static void main(String[] args) {
-		String[] videoFiles = { //
-		"A003-G昭亭路-文鼎路3文鼎路东-1-20150326205000-20150326205939-195056832.ts", //
-				"A050敬亭路-文鼎路3敬亭路南-1-20150326205000-20150326205947-195125067.ts", //
-				"B010锦城路-宣中后门路出口-1-20150326085000-20150326085934-195311270.ts", //
-				"B014-G鳌峰路-陵西路1陵西路北-2-20150326085000-20150326085935-195403888.ts", //
-				"B016-G鳌峰路-陵西路3鳌峰路东-1-20150326085000-20150326085940-195378148.ts", //
-				"C025庙埠村-村部-1-20150326205000-20150326205938-195258979.ts", //
-				"C028金苹果幼儿园-1-20150326205000-20150326205930-195190416.ts" };
-		IndexCloudSolr ics = new IndexCloudSolr();
-		//		ics.deleteQuery("*:*");
-		Video2Text video2Text = new Video2Text();
-		for (String videoFile : videoFiles) {
-			List<FrameRecord> records = video2Text.video2Text("/home/wanggang/develop/deeplearning/sample-videos/"
-					+ videoFile);
+		ImportVideo2SolrCloud iv2sc = new ImportVideo2SolrCloud();
+		//		iv2sc.flushSolr();
+		iv2sc.run("/home/wanggang/develop/deeplearning/sample-videos/mp4");
+		iv2sc.close();
+	}
+
+	public void run(String dirName) {
+		File dir = new File(dirName);
+		File[] files = dir.listFiles();
+		for (File file : files) {
+			logger.info("Tackle video:{}", file.getName());
+			// 存储视频到Riak中，然后分析视频帧文件，并存储到Solr中
+			List<FrameRecord> records = video2Text.video2Text(file);
 			ics.addDocsToSolr(records);
 		}
-		video2Text.close();
-		ics.close();
+	}
 
+	public void flushSolr() {
+		ics.deleteQuery("*:*");
+	}
+
+	public void close() {
+		ics.close();
+		video2Text.close();
 		// TS视频关闭不了，进程执行完需要强制关闭
 		ProcessAnalysis.killPid(ProcessAnalysis.getCurrentPidByLang());
 		System.err.println("关闭进程......");
