@@ -10,8 +10,6 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import zx.soft.utils.system.ProcessAnalysis;
-
 public class ImportVideo2SolrCloud {
 
 	private static Logger logger = LoggerFactory.getLogger(ImportVideo2SolrCloud.class);
@@ -55,8 +53,8 @@ public class ImportVideo2SolrCloud {
 		ics.close();
 		video2Text.close();
 		// TS视频关闭不了，进程执行完需要强制关闭
-		ProcessAnalysis.killPid(ProcessAnalysis.getCurrentPidByLang());
-		System.err.println("关闭进程......");
+		//		ProcessAnalysis.killPid(ProcessAnalysis.getCurrentPidByLang());
+		//		System.err.println("Closed this processor......");
 	}
 
 }

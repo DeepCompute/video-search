@@ -74,7 +74,7 @@ public class Video2Text {
 		List<FrameRecord> result = new ArrayList<>();
 		try (Video<MBFImage> frames = new XuggleVideo(new File(videoFile));) {
 			long current = System.currentTimeMillis();
-			logger.info("Video:{} has {} frmaes.", vname, frames.countFrames());
+			logger.info("Video:{} has {} frmaes, frame rate is {}.", vname, frames.countFrames(), frames.getFPS());
 			// 帧索引
 			int index = 1;
 			FrameRecord frameRecord = null;
@@ -83,6 +83,11 @@ public class Video2Text {
 			 */
 			for (MBFImage mbfImage : frames) {
 				System.err.println(index);
+				// 每帧率取1帧
+				if ((index - 1) % FRAME_RATE != 0) {
+					index++;
+					continue;
+				}
 				// id是根据videoName+frame_index进行MD5得到的
 				String id = CheckSumUtils.getMD5(vname + index);
 				/**
@@ -117,7 +122,7 @@ public class Video2Text {
 						.build();
 				// 添加到列表中
 				result.add(frameRecord);
-				index += FRAME_RATE;
+				index++;
 			}
 		}
 
