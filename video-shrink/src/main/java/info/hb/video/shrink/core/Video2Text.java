@@ -42,6 +42,8 @@ public class Video2Text {
 	public static final int HTTP_PORT = 8098;
 
 	// Nginx代理服务器
+	// 外网：220.178.89.250:9998
+	// 内网：192.168.31.11:1888
 	public static final String NGINX_PROXY = "192.168.31.11:1888";
 
 	// 帧率
